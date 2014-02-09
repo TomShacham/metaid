@@ -14,31 +14,40 @@ class Object
   end
 end
 
-class Creature
-  def self.traits( *arr )
-    return @traits if arr.empty?
-    attr_accessor *arr
-    arr.each do |trait|
-      meta_def trait do |val|
-        @traits ||= {}
-        @traits[trait] = val
-      end
-    end
-    class_def :initialize do
-      self.class.traits.each do |k,v|
-        instance_variable_set( "@#{k}", v )
-      end
-    end
+class Animal
+  meta_def :name do
+    puts 'animal'
   end
+end
+
+dog = Animal.new
+
+dog.meta_def :bark do
+  puts 'woof'
+end
+
+p dog.bark
+
+class Creature
+ def self.traits( *arr )
+   return @traits if arr.empty?
+   attr_accessor *arr
+   arr.each do |trait|
+     meta_def trait do |val|
+       @traits ||= {}
+       @traits[trait] = val
+     end
+   end
+   class_def :initialize do
+     self.class.traits.each do |k,v|
+       instance_variable_set( "@#{k}", v )
+     end
+   end
+ end
 end
 
 class Rabbit < Creature
-  traits :bombs, :arrows
-  def a
-  end
 end
 
-p Creature.methods.first
-p Rabbit.singleton_methods
 
 
